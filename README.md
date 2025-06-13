@@ -1,1 +1,1 @@
-#AMARA - Automated Manager for Agenda Reminder Assistant
+# AMARA - Automated Manager for Agenda Reminder Assistant
