@@ -1,4 +1,5 @@
 from PyPDF2 import PdfReader
+from pprint import pprint
 import re
 
 # ------------------------------------------
@@ -122,6 +123,9 @@ def parse_no_kursi(texts):
 
   return no_kursi
 
+# ------------------------------------------
+# Other Functions
+# ------------------------------------------
 def extract_texts(file_name):
   reader = PdfReader(file_name)
   pages = reader.pages
@@ -130,38 +134,60 @@ def extract_texts(file_name):
 
   return texts
 
-def make_dict():
-  pass
+def make_dict(mata_kuliah_arr, tanggal_arr, jam_arr, ruangan_arr, no_kursi_arr, jenis_ujian):
+  if jenis_ujian == "UTS":
+    mata_kuliah_arr = [f"[UTS] {mata_kuliah}" for mata_kuliah in mata_kuliah_arr]
+  elif jenis_ujian == "UAS":
+    mata_kuliah_arr = [f"[UAS] {mata_kuliah}" for mata_kuliah in mata_kuliah_arr]
+  else:
+    print(f"Error: `jenis_ujian` has wrong value`")
+  
+  events_arr = []
 
+  for i in range(len(mata_kuliah_arr)):
+    if tanggal_arr[i] is None:
+      continue
+    else:
+      exam_dict = {
+        "no": i,
+        "mata_kuliah": mata_kuliah_arr[i],
+        "tanggal": tanggal_arr[i],
+        "jam": jam_arr[i],
+        "ruangan": ruangan_arr[i],
+        "no_kursi": no_kursi_arr[i]
+      }
+      events_arr.append(exam_dict)
 
-# ---------------------
+  return events_arr
+
+# ------------------------------------------
 # file_name Name
-# ---------------------
+# ------------------------------------------
 # file_name = "./_data/UAS-2425-Genap-Ara.pdf"
 # file_name = "./_data/UAS-2425-Genap-Fawwaz.pdf"
 # file_name = "./_data/UTS-2425-Genap-Fawwaz.pdf"
 file_name = "./_data/UAS-2425-Genap-Adit.pdf"
 
-# ---------------------
+# ------------------------------------------
 # Extract the texts from pages
-# ---------------------
+# ------------------------------------------
 texts = extract_texts(file_name)
 
-# ---------------------
+# ------------------------------------------
 # Replace `\n` with ' '
-# ---------------------
+# ------------------------------------------
 texts = texts.replace('\n', ' ')
 # texts = re.sub(r'(Kelas:\s*\S+)(\d{2}-\d{2}-\d{4})', r'\1 \2', texts)
 
-# ---------------------
+# ------------------------------------------
 # Parse each rows
-# ---------------------
+# ------------------------------------------
 rows = parse_rows(texts)
 num_mata_kuliah = len(rows)
 
-# ---------------------
+# ------------------------------------------
 # Parse the data - HEADER
-# ---------------------
+# ------------------------------------------
 # Jenis Ujian UTS/UAS
 jenis_ujian = parse_jenis_ujian(texts)
 
@@ -174,29 +200,35 @@ nim = parse_nim(texts)
 # Prodi
 prodi = parse_prodi(texts)
 
-# ---------------------
+# ------------------------------------------
 # Parse the data - TABLE
-# ---------------------
+# ------------------------------------------
 # Mata Kuliah
-mata_kuliahs = [parse_mata_kuliah(row) for row in rows]
+mata_kuliah_arr = [parse_mata_kuliah(row) for row in rows]
 
 # Tanggal
-tanggals = [parse_tanggal(row) for row in rows]
+tanggal_arr = [parse_tanggal(row) for row in rows]
 
 # Jam
-jams = [parse_jam(row) for row in rows]
+jam_arr = [parse_jam(row) for row in rows]
 
 # Ruangan
-ruangans = [parse_ruangan(row) for row in rows]
+ruangan_arr = [parse_ruangan(row) for row in rows]
 
 # No Kursi
-no_kursis = [parse_no_kursi(row) for row in rows]
+no_kursi_arr = [parse_no_kursi(row) for row in rows]
+
+# ------------------------------------------
+# Main function
+# ------------------------------------------
+events_arr = make_dict(mata_kuliah_arr, tanggal_arr, jam_arr, ruangan_arr, no_kursi_arr, jenis_ujian)
 
 print(texts)
 print('-----------')
 for row in rows:
   print(row)
-  # print("-------------")
+
+print("-------------")
 
 # HEADER
 print(f'jenis_ujian: {jenis_ujian}')
@@ -204,23 +236,6 @@ print(f"nama_lengkap: {nama_lengkap}")
 print(f"nim: {nim}")
 print(f"prodi: {prodi}")
 
-# Table
-for mata_kuliah in mata_kuliahs:
-  print(mata_kuliah)
-  print("-------------")
-
-for tanggal in tanggals:
-  print(tanggal)
-  print("-------------")
-
-for jam in jams:
-  print(jam)
-  print("-------------")
-
-for ruangan in ruangans:
-  print(ruangan)
-  print("-------------")
-
-for no_kursi in no_kursis:
-  print(no_kursi)
-  print("-------------")
+# TABLE
+for event in events_arr:
+  pprint(event)
