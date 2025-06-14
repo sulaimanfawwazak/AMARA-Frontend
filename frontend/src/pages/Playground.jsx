@@ -49,29 +49,29 @@ function FileUpload({ onFileSelect }) {
 
   return (
     <div 
-      className='flex flex-row items-center justify-center w-screen min-h-screen px-8 py-4 bg-center bg-cover'
+      className='flex flex-row w-screen h-screen px-8 py-4 bg-center bg-cover'
       style={{backgroundImage: "url('/grainy-background.png')"}}
     >
       {/* Left */}
       <div className='flex flex-col items-center justify-center w-2/3 h-full gap-8 p-4'>
         <div className='w-3/4 space-y-4'>
-          <h1 className='text-4xl font-bold text-center text-white font-inter'>
-            UGM Exam Schedule to Google Calendar
+          <h1 className='text-5xl font-bold text-center text-white font-inter'>
+            Exam Schedule to Google Calendar
           </h1>
           <p className='text-xl text-center text-white'>
             Keep your exam schedule organized! No more manually inserting your schedule into Google Calendar, use this to automatically integrate you exam with Google Calendar!
           </p>
         </div>
-        <div className='flex flex-row items-center justify-center w-full space-x-8'>
-          <img className='w-1/5' src='/schedule-3d.png' width={100} alt='schedule-3d'/>
-          <img className='w-1/5' src='/exam-3d-2.png' width={100} alt='exam-3d-2'/>
+        <div className='flex flex-row items-center justify-center'>
+          <img className='w-1/4' src='/schedule-3d.png' width={100} alt='schedule-3d'/>
+          <img className='w-1/4' src='/exam-3d-2.png' width={100} alt='exam-3d-2'/>
         </div>
       </div>
 
       {/* Right */}
       <div className='flex items-center justify-center w-1/3 h-full py-28'>
         <div className='flex flex-col items-center justify-center px-8 py-12 space-y-4 rounded-lg bg-gradient-to-tr from-pink-100 to-blue-200'>
-          <h2 className='text-3xl font-semibold text-white font-inter'>Upload Your Schedule</h2>
+          <h2 className='text-3xl font-semibold font-inter'>Upload Your Schedule</h2>
 
           {/* Dropzone area */}
           <div
@@ -90,9 +90,9 @@ function FileUpload({ onFileSelect }) {
                   className={`transition-opacity ${isDragActive ? 'opacity-60' : 'opacity-100'}`}
                 />
                 {isDragActive ? (
-                  <p className='text-xl text-center text-green-600 font-inter'>Drop the PDF here!</p>
+                  <p className='text-xl text-center text-green-600'>Drop the PDF here!</p>
                 ) : (
-                  <p className='text-xl text-center text-gray-700 font-inter'>Click to upload or drag your file here</p>
+                  <p className='text-xl text-center text-gray-700'>Click to upload or drag your file here</p>
                 )}
               </>
             ) : (
@@ -105,9 +105,9 @@ function FileUpload({ onFileSelect }) {
             )}
           </div>
 
-          {/* Continue & Cancel Button */}
+          {/* Continue Button */}
           {fileName && (
-            <div className='flex flex-row items-center justify-start w-full gap-x-4'>
+            <div className='flex flex-row justify-start w-full gap-x-4'>
               <button 
                 className='px-2 py-3 text-white bg-blue-500 rounded-md hover:bg-blue-400'
                 onClick={handleContinue}

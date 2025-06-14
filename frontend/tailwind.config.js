@@ -7,10 +7,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        geist: ['"Geist"', 'sans-serif'],
-        inter: ['"Inter"', 'sans-serif'],
-        jetbrains: ['"JetBrains Mono"', 'sans-serif']
-      }
+        inter: ['Inter', 'sans-serif'],
+      },
     },
   },
   plugins: [],

@@ -33,6 +33,7 @@ def upload_pdf():
   try:
     reader = PdfReader(file)
     texts = reader.pages[0].extract_text().replace('\n', ' ')
+    print(f'text:\n{texts}')
 
     # HEADER
     jenis_ujian = parse_jenis_ujian(texts)
