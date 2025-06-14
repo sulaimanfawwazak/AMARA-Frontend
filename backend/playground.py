@@ -237,5 +237,7 @@ print(f"nim: {nim}")
 print(f"prodi: {prodi}")
 
 # TABLE
-for event in events_arr:
-  pprint(event)
+# for event in events_arr:
+  # pprint(event)
+
+print(events_arr)

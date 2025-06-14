@@ -4,11 +4,13 @@ import { BsFileEarmarkCheck } from 'react-icons/bs';
 
 function FileUpload({ onFileSelect }) {
   const [fileName, setFileName] = useState('');
+  const [selectedFile, setSelectedFile] = useState(null);
 
   // Configure dropzone
   const onDrop = useCallback((acceptedFiles) => {
     if (acceptedFiles[0]) {
       setFileName(acceptedFiles[0].name);
+      setSelectedFile(acceptedFiles[0]);
       onFileSelect(acceptedFiles[0]);
     }
   }, [onFileSelect]);
@@ -22,8 +24,10 @@ function FileUpload({ onFileSelect }) {
   });
 
   const handleContinue = async () => {
+    if (!selectedFile) return;
+
     const formData = new FormData();
-    formData.append('file', fileName); // Attach the file
+    formData.append('file', selectedFile); // Attach the file
 
     try {
       const response = await fetch('http://localhost:5000/upload', {
@@ -87,7 +91,7 @@ function FileUpload({ onFileSelect }) {
           <div className='flex flex-row justify-start w-full gap-x-4'>
             <button 
               className='px-2 py-3 text-white bg-blue-500 rounded-md hover:bg-blue-400'
-              onClick={handleContinue()}
+              onClick={handleContinue}
             >
 
               Continue
@@ -97,10 +101,11 @@ function FileUpload({ onFileSelect }) {
               className='px-2 py-3 text-blue-500 transition border border-blue-500 rounded-md hover:bg-red-500 hover:border-red-500 hover:text-white'
               onClick={(e) => {
                 e.stopPropagation();
+                setSelectedFile(null);
                 setFileName('');
               }}
             >
-              Reset
+              Cancel
             </button>
           </div>
         )}
