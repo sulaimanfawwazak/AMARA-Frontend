@@ -118,48 +118,69 @@ function ExamList() {
 
   const handleCancel = () => navigate('/');
 
-  if (!exams) return <p>No exam data found. Please upload a file first.</p>;
-  if (!Array.isArray(exams)) return <p>Invalid data format. Please try uploading again. exams is {typeof(exams)}</p>
+  if (!exams) return (
+    <p
+      className='flex items-center justify-center min-h-screen text-4xl font-bold text-white font-inter'
+      style={{ backgroundImage: "url('/error-background.png')" }}
+    >
+      No exam data found. Please upload a file first.
+    </p>
+  );
+  
+  if (!Array.isArray(exams)) return (
+    <p
+      className='flex items-center justify-center min-h-screen text-4xl font-bold text-white font-inter'
+      style={{ backgroundImage: "url('/error-background.png')" }}
+    >
+      Invalid data format. Please try uploading again. exams is {typeof(exams)}
+    </p>
+  );
 
   return (
     <div
-      className='flex flex-col items-center justify-center w-screen min-h-screen py-8 bg-center bg-cover'
+      className='flex flex-col items-center justify-center w-full min-h-screen px-4 py-8 bg-center bg-cover'
       style={{backgroundImage: "url('/background-variation-2.png')"}}
     >
-      <div className="w-1/3 p-8">
-        <h1 className="mb-6 text-5xl font-bold text-center text-white font-inter">Your Exam Schedule</h1>
+      <div className="w-full max-w-3xl p-4 md:p-8">
+        <h1 className="mb-6 text-3xl font-bold text-center text-white md:text-5xl font-inter">
+          Your Exam Schedule
+        </h1>
         
         {/* Exams Container */}
-        <div className='space-y-2'>
+        <div className='space-y-3'>
           {exams.map((exam, index) => (
             // Exam Card
-            <div key={index} className='flex flex-row justify-center px-2 py-4 bg-white rounded-lg shadow-xl'>
+            <div key={index} className='flex items-center gap-2 px-4 py-4 bg-white rounded-lg shadow-lg sm:flex-row sm:gap-4'>
               {/* Number */}
-              <div className='flex items-center justify-center w-1/12'>
-                <h2 className='text-2xl font-bold'>{index + 1}</h2>
+              <div className='w-1/12 text-center'>
+                <h2 className='text-xl font-bold'>{index + 1}</h2>
               </div>
 
               {/* Rest of the data */}
-              <div className='flex flex-col justify-center w-11/12'>
+              <div className='w-full sm:w-11/12'>
                 <h2 className='text-lg font-bold font-inter'>{exam.mata_kuliah}</h2>
-                <p className='font-inter'>{exam.tanggal} • {exam.jam} • {exam.ruangan} • {exam.no_kursi}</p>
+                <p className='text-md font-inter'>{exam.tanggal} • {exam.jam} • {exam.ruangan} • {exam.no_kursi}</p>
               </div>
             </div>
           ))}
 
           {/* Buttons */}
-          <div className='flex flex-row space-x-2'>
-            <div
-              className='px-4 py-2 mt-8 text-white transition bg-blue-500 rounded-md cursor-pointer hover:bg-blue-300 font-inter'
+          <div className='flex flex-col gap-3 mt-6 sm:flex-row sm:space-x-4 sm:gap-0'>
+            
+            {/* Add to Google Calendar */}
+            <button
+              className='px-4 py-3 font-bold text-white transition bg-blue-500 rounded-md hover:bg-blue-300 font-inter'
               onClick={addToCalendar}
             >
               Add to Goole Calendar
-            </div>
-            <div 
-              className='flex items-center justify-center px-4 py-2 mt-8 text-blue-500 transition border border-blue-500 rounded-md cursor-pointer hover:bg-red-500 hover:text-white hover:border-red-500 font-inter'
+            </button>
+
+            {/* Cancel */}
+            <button 
+              className='px-4 py-3 font-bold text-blue-500 transition border border-blue-500 rounded-md hover:bg-red-500 hover:text-white hover:border-red-500 font-inter'
               onClick={handleCancel}>
               Cancel
-            </div>
+            </button>
           </div>
         </div>
       </div>
