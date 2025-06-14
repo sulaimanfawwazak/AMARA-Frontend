@@ -1,7 +1,9 @@
+import re
+import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from PyPDF2 import PdfReader
-import re
+from dotenv import load_dotenv
 from parse_data import (
   parse_jenis_ujian,
   parse_nama_lengkap,
@@ -16,6 +18,8 @@ from parse_data import (
   make_dict
 )
 
+load_dotenv()
+
 # Initialize Flask app
 app = Flask(__name__)
 CORS(app, resources={
@@ -29,7 +33,7 @@ CORS(app, resources={
 
 @app.route("/")
 def health_check():
-  return jsonify({"status": "healthy"})
+  return jsonify({"status": "healthy"}), 200
 
 # POST Method to /upload endpoint
 @app.route("/upload", methods=["POST"])
@@ -89,5 +93,7 @@ def upload_pdf():
   
 # app = app.wsgi_app
 
+port = int(os.environ.get("PORT", 5000))
+
 if __name__ == '__main__':
-  app.run(host="0.0.0.0", port=5000)
+  app.run(host="0.0.0.0", port=port)
