@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from PyPDF2 import PdfReader
 import re
-from playground import (
+from parse_data import (
   parse_jenis_ujian,
   parse_nama_lengkap,
   parse_nim,
@@ -16,9 +16,11 @@ from playground import (
   make_dict
 )
 
+# Initialize Flask app
 app = Flask(__name__)
 CORS(app)
 
+# POST Method to /upload endpoint
 @app.route("/upload", methods=["POST"])
 def upload_pdf():
   if "file" not in request.files:
