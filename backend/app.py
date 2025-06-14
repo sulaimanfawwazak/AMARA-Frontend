@@ -27,13 +27,18 @@ def upload_pdf():
     return jsonify({"error": "No file uploaded"}), 400
   
   file = request.files["file"]
+  if file.filename == "":
+    return jsonify({"error": "No selected file"}), 400
   if not file.filename.endswith(".pdf"):
     return jsonify({"error": "File must be a PDF"}), 400
   
   try:
     reader = PdfReader(file)
+    if len(reader.pages) == 0:
+      return jsonify({"error": "PDF contains no pages"}), 400
+    
     texts = reader.pages[0].extract_text().replace('\n', ' ')
-    print(f'text:\n{texts}')
+    # print(f'text:\n{texts}')
 
     # HEADER
     jenis_ujian = parse_jenis_ujian(texts)
@@ -70,3 +75,6 @@ def upload_pdf():
   
   except Exception as e:
     return jsonify({"error": f"Parsing failed: {str(e)}"}), 500
+  
+if __name__ == '__main__':
+  app.run(host="0.0.0.0", port=5000)
