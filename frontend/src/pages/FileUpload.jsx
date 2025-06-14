@@ -49,11 +49,11 @@ function FileUpload({ onFileSelect }) {
 
   return (
     <div 
-      className='flex flex-row items-center justify-center w-screen min-h-screen px-8 py-4 bg-center bg-cover'
+      className='flex flex-col items-center justify-center w-screen min-h-screen px-6 py-6 space-y-6 bg-center bg-cover md:flex-row'
       style={{backgroundImage: "url('/grainy-background.png')"}}
     >
       {/* Left */}
-      <div className='flex flex-col items-center justify-center w-2/3 h-full gap-8 p-4'>
+      <div className='flex flex-col items-center justify-center w-full h-full gap-8 px-4 md:w-2/3'>
         <div className='w-3/4 space-y-4'>
           <h1 className='text-4xl font-bold text-center text-white font-inter'>
             UGM Exam Schedule to Google Calendar
@@ -62,21 +62,28 @@ function FileUpload({ onFileSelect }) {
             Keep your exam schedule organized! No more manually inserting your schedule into Google Calendar, use this to automatically integrate you exam with Google Calendar!
           </p>
         </div>
-        <div className='flex flex-row items-center justify-center w-full space-x-8'>
-          <img className='w-1/5' src='/schedule-3d.png' width={100} alt='schedule-3d'/>
-          <img className='w-1/5' src='/exam-3d-2.png' width={100} alt='exam-3d-2'/>
+
+        <div className='flex flex-wrap items-center justify-center gap-4'>
+          {/* <img className='w-24 md:w-32' src='/schedule-3d.png' alt='schedule-3d'/> */}
+          <img className='w-24 md:w-32' src='/logo-ugm-putih.png' alt='schedule-3d'/>
+          <img className='w-24 md:w-32' src='/exam-3d-2.png' alt='exam-3d-2'/>
+        </div>
+
+        <div className='space-y-1'>
+          <p className='font-mono text-sm text-center'>Made with <span className='font-sans'>❤️</span> and <span className='font-sans'>☕</span> by <a className='font-mono text-blue-700 underline underline-offset-2' href="https://github.com/sulaimanfawwazak">pwnwas</a> </p>
+          <p className='font-mono text-sm text-center'><a className='text-blue-700 underline' href='https://saweria.co/pwnwas'>Donate</a> buat mam warmindo 💵</p>
         </div>
       </div>
 
       {/* Right */}
-      <div className='flex items-center justify-center w-1/3 h-full py-28'>
-        <div className='flex flex-col items-center justify-center px-8 py-12 space-y-4 rounded-lg bg-gradient-to-tr from-pink-100 to-blue-200'>
-          <h2 className='text-3xl font-semibold text-white font-inter'>Upload Your Schedule</h2>
+      <div className='flex items-center justify-center w-full h-full md:w-1/3'>
+        <div className='flex flex-col items-center justify-center w-full max-w-md px-6 py-10 space-y-4 rounded-lg bg-gradient-to-tr from-pink-100 to-blue-200'>
+          <h2 className='text-2xl font-semibold text-center text-white md:text-3xl font-inter'>Upload Your Schedule</h2>
 
           {/* Dropzone area */}
           <div
             {...getRootProps()}
-            className={`flex flex-col items-center justify-center gap-4 p-4 border-2 border-dashed rounded-md hover:cursor-pointer hover:bg-blue-100 transition ${
+            className={`w-full p-4 border-2 border-dashed rounded-md transition cursor-pointer hover:bg-blue-100 flex flex-col items-center justify-center gap-4 ${
               isDragActive ? 'border-green-500 bg-green-50' : 'border-blue-500 bg-blue-50'
             }`}
           >
@@ -86,38 +93,39 @@ function FileUpload({ onFileSelect }) {
                 <img 
                   src='/file-upload-blue.png' 
                   alt='upload-file-icon' 
-                  width={130}
-                  className={`transition-opacity ${isDragActive ? 'opacity-60' : 'opacity-100'}`}
+                  className={`w-24 transition-opacity ${isDragActive ? 'opacity-60' : 'opacity-100'}`}
                 />
                 {isDragActive ? (
-                  <p className='text-xl text-center text-green-600 font-inter'>Drop the PDF here!</p>
+                  <p className='text-center text-green-500 font-inter'>Drop the PDF here!</p>
                 ) : (
-                  <p className='text-xl text-center text-gray-700 font-inter'>Click to upload or drag your file here</p>
+                  <p className='text-center text-gray-700 font-inter'>Click to upload or drag your file here</p>
                 )}
               </>
             ) : (
               <div className='flex flex-col items-center gap-2'>
-                <BsFileEarmarkCheck className='text-6xl text-blue-500'/>
-                <p className='w-56 text-gray-700 truncate'>
+                <BsFileEarmarkCheck className='text-5xl text-blue-500'/>
+                <p className='w-56 text-center text-gray-700 truncate'>
                   Selected: <span className='font-bold'>{fileName}</span>
                 </p>
               </div>
             )}
           </div>
 
-          {/* Continue & Cancel Button */}
+          {/* Buttons */}
           {fileName && (
-            <div className='flex flex-row items-center justify-start w-full gap-x-4'>
+            <div className='flex flex-col w-full gap-4 sm:flex-row'>
+              
+              {/* Continue */}
               <button 
-                className='px-2 py-3 text-white bg-blue-500 rounded-md hover:bg-blue-400'
+                className='w-full px-4 py-2 text-white bg-blue-500 rounded-md sm:w-auto hover:bg-blue-400'
                 onClick={handleContinue}
               >
-
                 Continue
               </button>
               
+              {/* Cancel */}
               <button
-                className='px-2 py-3 text-blue-500 transition border border-blue-500 rounded-md hover:bg-red-500 hover:border-red-500 hover:text-white'
+                className='w-full px-4 py-2 text-blue-500 transition border border-blue-500 rounded-md sm:w-auto hover:bg-red-500 hover:border-red-500 hover:text-white'
                 onClick={(e) => {
                   e.stopPropagation();
                   setSelectedFile(null);
