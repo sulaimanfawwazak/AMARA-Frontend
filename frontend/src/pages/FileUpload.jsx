@@ -32,7 +32,7 @@ function FileUpload({ onFileSelect }) {
     formData.append('file', selectedFile); // Attach the file
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL_DEV}/upload`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL_PROD}/upload`, {
         method: 'POST',
         body: formData,
       });
