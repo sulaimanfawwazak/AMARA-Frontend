@@ -18,7 +18,18 @@ from parse_data import (
 
 # Initialize Flask app
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={
+  r"/*": {
+    "origins": [
+      "https://ugmexam2gcal.vercel.app/",
+      "http://localhost:3000"  # For local dev
+    ]
+  }
+})
+
+@app.route("/")
+def health_check():
+  return jsonify({"status": "healthy"})
 
 # POST Method to /upload endpoint
 @app.route("/upload", methods=["POST"])
