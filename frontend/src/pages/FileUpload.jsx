@@ -32,7 +32,7 @@ function FileUpload({ onFileSelect }) {
     formData.append('file', selectedFile); // Attach the file
 
     try {
-      const response = await fetch('http://localhost:5000/upload', {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL_DEV}/upload`, {
         method: 'POST',
         body: formData,
       });
@@ -69,7 +69,8 @@ function FileUpload({ onFileSelect }) {
           <img className='w-24 md:w-32' src='/exam-3d-2.png' alt='exam-3d-2'/>
         </div>
 
-        <div className='space-y-1'>
+        {/* Footer */}
+        <div className='hidden space-y-1 md:block'>
           <p className='font-mono text-sm text-center'>Made with <span className='font-sans'>❤️</span> and <span className='font-sans'>☕</span> by <a className='font-mono text-blue-700 underline underline-offset-2' href="https://github.com/sulaimanfawwazak">pwnwas</a> </p>
           <p className='font-mono text-sm text-center'><a className='text-blue-700 underline' href='https://saweria.co/pwnwas'>Donate</a> buat mam warmindo 💵</p>
         </div>
@@ -137,6 +138,11 @@ function FileUpload({ onFileSelect }) {
             </div>
           )}
         </div>
+      </div>
+      {/* Footer */}
+      <div className='block space-y-1 md:hidden'>
+        <p className='font-mono text-sm text-center'>Made with <span className='font-sans'>❤️</span> and <span className='font-sans'>☕</span> by <a className='font-mono text-blue-700 underline underline-offset-2' href="https://github.com/sulaimanfawwazak">pwnwas</a> </p>
+        <p className='font-mono text-sm text-center'><a className='text-blue-700 underline' href='https://saweria.co/pwnwas'>Donate</a> buat mam di warmindo 💵😋</p>
       </div>
     </div>
   );
