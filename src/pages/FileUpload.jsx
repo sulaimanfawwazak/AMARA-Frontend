@@ -37,7 +37,7 @@ function FileUpload({ onFileSelect }) {
         ? import.meta.env.VITE_BACKEND_URL_PROD 
         : "http://localhost:5000";
         
-      const response = await fetch(`${backendUrl}/upload`, {
+      const response = await fetch(`$https://amara-backend.vercel.app/upload`, {
         method: 'POST',
         body: formData,
       });
