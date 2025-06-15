@@ -25,7 +25,7 @@ app = Flask(__name__)
 CORS(app, resources={
   r"/*": {
     "origins": [
-      "https://ugmexam2gcal.vercel.app/",
+      "https://ugmexam2gcal.vercel.app",
       "http://localhost:3000"  # For local dev
     ]
   }

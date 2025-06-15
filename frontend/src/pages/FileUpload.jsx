@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { BsFileEarmarkCheck } from 'react-icons/bs';
+import { FaGithub, FaInstagram } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 function FileUpload({ onFileSelect }) {
@@ -32,7 +33,11 @@ function FileUpload({ onFileSelect }) {
     formData.append('file', selectedFile); // Attach the file
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL_PROD}`, {
+      const backendUrl = import.meta.env.VITE_APP_MODE === "PROD"
+        ? import.meta.env.VITE_BACKEND_URL_PROD 
+        : "http://localhost:5000";
+        
+      const response = await fetch(`${backendUrl}/upload`, {
         method: 'POST',
         body: formData,
       });
@@ -56,10 +61,10 @@ function FileUpload({ onFileSelect }) {
       <div className='flex flex-col items-center justify-center w-full h-full gap-8 px-4 md:w-2/3'>
         <div className='w-3/4 space-y-4'>
           <h1 className='text-4xl font-bold text-center text-white font-inter'>
-            UGM Exam Schedule to Google Calendar
+            UGM Exam Schedule to Google Calendar Converter
           </h1>
           <p className='text-xl text-center text-white'>
-            Keep your exam schedule organized! No more manually inserting your schedule into Google Calendar, use this to automatically integrate you exam with Google Calendar!
+            No more manual entry! Sync your upcoming exam schedule to Google Calendar instantly!
           </p>
         </div>
 
@@ -72,7 +77,15 @@ function FileUpload({ onFileSelect }) {
         {/* Footer */}
         <div className='hidden space-y-1 md:block'>
           <p className='font-mono text-sm text-center'>Made with <span className='font-sans'>❤️</span> and <span className='font-sans'>☕</span> by <a className='font-mono text-blue-700 underline underline-offset-2' href="https://github.com/sulaimanfawwazak">pwnwas</a> </p>
-          <p className='font-mono text-sm text-center'><a className='text-blue-700 underline' href='https://saweria.co/pwnwas'>Donate</a> buat mam warmindo 💵</p>
+          <p className='font-mono text-sm text-center'><a className='text-blue-700 underline' href='https://saweria.co/pwnwas'>Donate</a> buat mam di warmindo 💵😋</p>
+          <div className='flex flex-row justify-center py-4 space-x-8'>
+            <a href='https://github.com/sulaimanfawwazak'>
+              <FaGithub className='transition cursor-pointer hover:text-blue-700'/>
+            </a>
+            <a href='https://instagram.com/sfawwazak'>
+              <FaInstagram className='transition cursor-pointer hover:text-blue-700'/>
+            </a>
+          </div>
         </div>
       </div>
 
@@ -143,6 +156,14 @@ function FileUpload({ onFileSelect }) {
       <div className='block space-y-1 md:hidden'>
         <p className='font-mono text-sm text-center'>Made with <span className='font-sans'>❤️</span> and <span className='font-sans'>☕</span> by <a className='font-mono text-blue-700 underline underline-offset-2' href="https://github.com/sulaimanfawwazak">pwnwas</a> </p>
         <p className='font-mono text-sm text-center'><a className='text-blue-700 underline' href='https://saweria.co/pwnwas'>Donate</a> buat mam di warmindo 💵😋</p>
+          <div className='flex flex-row justify-center py-4 space-x-8'>
+            <a href='https://github.com/sulaimanfawwazak'>
+              <FaGithub href='https://github.com/sulaimanfawwazak' className='transition cursor-pointer hover:text-blue-700'/>
+            </a>
+            <a href='https://instagram.com/sfawwazak'>
+              <FaInstagram className='transition cursor-pointer hover:text-blue-700'/>
+            </a>
+          </div>
       </div>
     </div>
   );

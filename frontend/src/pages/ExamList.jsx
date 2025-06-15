@@ -120,7 +120,7 @@ function ExamList() {
 
   if (!exams) return (
     <p
-      className='flex items-center justify-center min-h-screen text-4xl font-bold text-white font-inter'
+      className='flex justify-center min-h-screen py-24 text-4xl font-bold text-center text-white bg-center font-inter'
       style={{ backgroundImage: "url('/error-background.png')" }}
     >
       No exam data found. Please upload a file first.
@@ -129,7 +129,7 @@ function ExamList() {
   
   if (!Array.isArray(exams)) return (
     <p
-      className='flex items-center justify-center min-h-screen text-4xl font-bold text-white font-inter'
+      className='flex items-center justify-center min-h-screen text-4xl font-bold text-center text-white font-inter'
       style={{ backgroundImage: "url('/error-background.png')" }}
     >
       Invalid data format. Please try uploading again. exams is {typeof(exams)}
