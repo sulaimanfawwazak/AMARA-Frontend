@@ -33,11 +33,15 @@ function FileUpload({ onFileSelect }) {
     formData.append('file', selectedFile); // Attach the file
 
     try {
-      const backendUrl = import.meta.env.VITE_APP_MODE === "PROD"
-        ? import.meta.env.VITE_BACKEND_URL_PROD 
-        : "http://localhost:5000";
+      // const backendUrl = import.meta.env.VITE_APP_MODE === "PROD"
+        // ? import.meta.env.VITE_BACKEND_URL_PROD 
+        // : "http://localhost:5000";
+
+      const backendUrl = import.meta.env.VITE_BACKEND_URL_PROD || "http://localhost:5000";
+      console.log(backendUrl);
         
-      const response = await fetch(`https://amara-backend.vercel.app/upload`, {
+      // const response = await fetch(`https://amara-backend.vercel.app/upload`, {
+      const response = await fetch(`${backendUrl}/upload`, {
         method: 'POST',
         body: formData,
       });
@@ -116,9 +120,9 @@ function FileUpload({ onFileSelect }) {
                 )}
               </>
             ) : (
-              <div className='flex flex-col items-center gap-2'>
+              <div className='flex flex-col items-center gap-2 w-52'>
                 <BsFileEarmarkCheck className='text-5xl text-blue-500'/>
-                <p className='w-56 text-center text-gray-700 truncate'>
+                <p className='w-full px-4 text-center text-gray-700 truncate'>
                   Selected: <span className='font-bold'>{fileName}</span>
                 </p>
               </div>
