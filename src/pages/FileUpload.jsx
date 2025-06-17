@@ -9,6 +9,9 @@ function FileUpload({ onFileSelect }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+
   const navigate = useNavigate();
 
   // List of all images that need to be preloaded
@@ -72,8 +75,11 @@ function FileUpload({ onFileSelect }) {
   });
 
   const handleContinue = async () => {
-    if (!selectedFile) return;
-
+    if (!selectedFile || isUploading) return;
+    
+    setIsUploading(true);
+    setUploadProgress(0);
+    
     const formData = new FormData();
     formData.append('file', selectedFile); // Attach the file
 
@@ -84,26 +90,52 @@ function FileUpload({ onFileSelect }) {
 
       const backendUrl = import.meta.env.VITE_BACKEND_URL_PROD || "http://localhost:5000";
       console.log(backendUrl);
+
+      const progressInterval = setInterval(() => {
+        setUploadProgress(prev => {
+          if (prev >= 90) {
+            clearInterval(progressInterval);
+            return prev;
+          }
+          return prev + Math.random() * 15;
+        });
+      }, 200);
         
       // const response = await fetch(`http://localhost:5000/upload`, {
       const response = await fetch(`${backendUrl}/upload`, {
         method: 'POST',
         body: formData,
       });
+
+      clearInterval(progressInterval);
+      setUploadProgress(100);
+
+      if (!response.ok) {
+        throw new Error(`Upload failed: ${response.status}`);
+      }
+
       const exams = await response.json();
       console.log(exams);
+      
+      // Small delay to show 100% completion
+      setTimeout(() => {
+        navigate('/exam', { state: { exams: exams.jadwal } })
+      }, 500);
 
       // Redirect to `/exam`
-      navigate('/exam', { state: { exams: exams.jadwal } })
+      // navigate('/exam', { state: { exams: exams.jadwal } })
     }
     catch (error) {
       console.error("Upload failed:", error);
+      setIsUploading(false);
+      setUploadProgress(0);
+      alert("Upload failed. Please try again");
     }
   };
 
   // Loading screen component
   const LoadingScreen = () => (
-    <div className='flex flex-col items-center justify-center w-screen min-h-screen bg-gradient-to-b from-blue-300 via bg-pink-50 to-pink-200'>
+    <div className='flex flex-col items-center justify-center w-screen min-h-screen bg-gradient-to-b from-blue-300 via-pink-50 to-pink-200'>
       <div className='space-y-6 text-center'>
         <div className='w-16 h-16 mx-auto border-4 border-white rounded-full border-t-transparent animate-spin'></div>
         <h2 className='text-2xl font-bold text-white font-inter'>Loading...</h2>
@@ -146,6 +178,7 @@ function FileUpload({ onFileSelect }) {
           animation: fadeIn 0.5s ease-in-out forwards;
         }
       `}</style>
+
       {/* Left */}
       <div className='flex flex-col items-center justify-center w-full h-full gap-8 px-4 md:w-2/3'>
         <div className='w-3/4 space-y-4'>
@@ -220,23 +253,58 @@ function FileUpload({ onFileSelect }) {
               
               {/* Continue */}
               <button 
-                className='w-full px-4 py-2 text-white bg-blue-500 rounded-md sm:w-auto hover:bg-blue-400'
+                className={`w-full px-4 py-2 text-white bg-blue-500 rounded-md sm:w-auto ${
+                  isUploading
+                    ? 'bg-gray-400 cursor-not-allowed'
+                    : 'bg-blue-500 hover:bg-blue-400'
+                }`}
                 onClick={handleContinue}
+                disabled={isUploading}
               >
-                Continue
+                {isUploading ? (
+                  <>
+                    <div className='w-4 h-4 border-2 border-white rounded-full border-t-transparent animate-spin'></div>
+                    <span>Uploading...</span>
+                  </>
+                ) : (
+                  'Continue'
+                )}
+                {/* Continue */}
               </button>
               
               {/* Cancel */}
               <button
-                className='w-full px-4 py-2 text-blue-500 transition border border-blue-500 rounded-md sm:w-auto hover:bg-red-500 hover:border-red-500 hover:text-white'
+                className={`w-full px-4 py-2 transition border rounded-md sm:w-auto ${
+                  isUploading
+                    ? 'text-gray-400 border-gray-400 cursor-not-allowed'
+                    : 'text-blue-500 border-blue-500 hover:bg-red-500 hover:border-red-500 hover:text-white'
+                }`}
                 onClick={(e) => {
                   e.stopPropagation();
-                  setSelectedFile(null);
-                  setFileName('');
+                  if (!isUploading) {
+                    setSelectedFile(null);
+                    setFileName('');
+                  }
                 }}
+                disabled={isUploading}
               >
                 Cancel
               </button>
+            </div>
+          )}
+
+          {/* Upload Progress Bar */}
+          {isUploading && (
+            <div className='w-full space-y-2'>
+              <div className='w-full h-2 bg-gray-200 rounded-full'>
+                <div 
+                  className='h-2 transition-all duration-300 ease-out bg-blue-500 rounded-full'
+                  style={{ width: `${uploadProgress}%` }}
+                ></div>
+              </div>
+              <p className='text-sm text-center text-gray-600'>
+                {Math.round(uploadProgress)}% uploaded
+              </p>
             </div>
           )}
         </div>
