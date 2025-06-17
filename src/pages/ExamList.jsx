@@ -1,6 +1,6 @@
 // frontend/src/pages/ExamList.jsx
 import { useEffect, useState } from 'react';
-import { redirect, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
 const API_KEY = import.meta.env.VITE_API_KEY;
@@ -15,6 +15,23 @@ function ExamList() {
   const [gapiLoaded, setGapiLoaded] = useState(false);
   const [gisLoaded, setGisLoaded] = useState(false);
   const [tokenClient, setTokenClient] = useState(null);
+  const [bgLoaded, setBgLoaded] = useState(false);
+  // const [loadingProgress, setLoadingProgress] = useState(0);
+  
+
+  const backgroundUrl = '/background-variation-2.png';
+
+  // Load background image
+  useEffect(() => {
+    const img = new Image();
+    img.src = backgroundUrl;
+    // img.onload = () => {
+      // setTimeout(() => {
+        // setBgLoaded(true)
+      // }, 2000);
+    // };
+    img.onload = () => setBgLoaded(true);
+  }, []);
 
   // Load Google API (GAPI)
   useEffect(() => {
@@ -117,6 +134,35 @@ function ExamList() {
   };
 
   const handleCancel = () => navigate('/');
+
+  // Loading screen component
+  const LoadingScreen = () => (
+    <div className='flex flex-col items-center justify-center w-screen min-h-screen bg-gradient-to-b from-blue-300 via-pink-50 to-pink-200'>
+      <div className='space-y-6 text-center'>
+        <div className='w-16 h-16 mx-auto border-4 border-white rounded-full border-t-transparent animate-spin'></div>
+        <h2 className='text-2xl font-bold text-white font-inter'>Loading...</h2>
+        <div className='flex items-center justify-center w-64 h-2 bg-gray-200 rounded-full'>
+          <div 
+            className='h-2 transition-all duration-300 ease-out bg-blue-500 rounded-full'
+            style={{ width: `${loadingProgress}%` }}
+          ></div>
+        </div>
+        <p className='text-white opacity-75'>{Math.round(loadingProgress)}%</p>
+      </div>
+    </div>
+  )
+
+  if (!bgLoaded) {
+    return (
+      <div className="flex items-center justify-center w-full h-screen from-blue-300 to-pink-200 bg-gradient-to-b">
+        <div className='p-4 space-y-4 rounded-lg animate-pulse'>
+          <p className="text-4xl font-semibold text-white font-inter">Please Wait...</p>
+          <div className='w-16 h-16 mx-auto border-4 border-white rounded-full border-t-transparent animate-spin'></div>
+        </div>
+      </div>
+      // <LoadingScreen/>
+    );
+  }
 
   if (!exams) return (
     <p
