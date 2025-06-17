@@ -135,7 +135,7 @@ function FileUpload({ onFileSelect }) {
 
   // Loading screen component
   const LoadingScreen = () => (
-    <div className='flex flex-col items-center justify-center w-screen min-h-screen bg-gradient-to-b from-blue-300 via-pink-50 to-pink-200'>
+    <div className='flex flex-col items-center justify-center w-screen min-h-screen bg-gradient-to-b from-blue-300 to-pink-200'>
       <div className='space-y-6 text-center'>
         <div className='w-16 h-16 mx-auto border-4 border-white rounded-full border-t-transparent animate-spin'></div>
         <h2 className='text-2xl font-bold text-white font-inter'>Loading...</h2>
