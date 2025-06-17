@@ -262,10 +262,10 @@ function FileUpload({ onFileSelect }) {
                 disabled={isUploading}
               >
                 {isUploading ? (
-                  <>
+                  <div className='flex flex-col items-center justify-center'>
                     <div className='w-4 h-4 border-2 border-white rounded-full border-t-transparent animate-spin'></div>
-                    <span>Uploading...</span>
-                  </>
+                    <span className='text-center'>Uploading...</span>
+                  </div>
                 ) : (
                   'Continue'
                 )}
