@@ -159,7 +159,17 @@ function ExamList() {
               {/* Rest of the data */}
               <div className='w-full sm:w-11/12'>
                 <h2 className='text-lg font-bold font-inter'>{exam.mata_kuliah}</h2>
-                <p className='text-md font-inter'>{exam.tanggal} • {exam.jam} • {exam.ruangan} • {exam.no_kursi}</p>
+                {/* <p className='text-md font-inter'>📅 {exam.tanggal} • 🕗 {exam.jam} • 🏫{exam.ruangan} • #️⃣{exam.no_kursi}</p> */}
+                <div className='grid grid-cols-2 mt-2 sm:grid-cols-4'>
+                  <div>
+                    <p className='text-md font-inter'>📅 {exam.tanggal}</p>
+                    <p className='text-md font-inter'>🕗 {exam.jam}</p>
+                  </div>
+                  <div>
+                    <p className='text-md font-inter'>🏫 {exam.ruangan}</p>
+                    <p className='text-md font-inter'>#️⃣ {exam.no_kursi}</p>
+                  </div>
+                </div>
               </div>
             </div>
           ))}
