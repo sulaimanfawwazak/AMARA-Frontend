@@ -7,7 +7,52 @@ import { useNavigate } from 'react-router-dom';
 function FileUpload({ onFileSelect }) {
   const [fileName, setFileName] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(0);
   const navigate = useNavigate();
+
+  // List of all images that need to be preloaded
+  const imagesToPreload = [
+    '/grainy-background.png',
+    '/logo-ugm-putih.png',
+    '/exam-3d-2.png',
+    '/file-upload-blue.png'
+  ];
+
+  // Preload images on component mount
+  useEffect(() => {
+    const preloadImages = async () => {
+      const imagePromises = imagesToPreload.map((src, index) => {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => {
+            setLoadingProgress(prev => prev + (100 / imagesToPreload.length));
+            resolve(src);
+          };
+          img.onerror = () => {
+            console.warn(`Failed to load image: ${src}`);
+            setLoadingProgress(prev => prev + (100 / imagesToPreload.length));
+            resolve(src);
+          };
+          img.src = src;
+        });
+      });
+      
+      try {
+        await Promise.all(imagePromises);
+        // Small dealy to ensure smooth transition
+        setTimeout(() => {
+          setImagesLoaded(true);
+        }, 100);
+      }
+      catch (error) {
+        console.error('Error preloading images:', error);
+        setImagesLoaded(true);
+      }
+    };
+
+    preloadImages();
+  }, []);
 
   // Configure dropzone
   const onDrop = useCallback((acceptedFiles) => {
@@ -56,11 +101,51 @@ function FileUpload({ onFileSelect }) {
     }
   };
 
+  // Loading screen component
+  const LoadingScreen = () => (
+    <div className='flex flex-col items-center justify-center w-screen min-h-screen bg-gradient-to-b from-blue-300 via bg-pink-50 to-pink-200'>
+      <div className='space-y-6 text-center'>
+        <div className='w-16 h-16 mx-auto border-4 border-white rounded-full border-t-transparent animate-spin'></div>
+        <h2 className='text-2xl font-bold text-white font-inter'>Loading...</h2>
+        <div className='flex items-center justify-center w-64 h-2 bg-gray-200 rounded-full'>
+          <div 
+            className='h-2 transition-all duration-300 ease-out bg-blue-500 rounded-full'
+            style={{ width: `${loadingProgress}%` }}
+          ></div>
+        </div>
+        <p className='text-white opacity-75'>{Math.round(loadingProgress)}%</p>
+      </div>
+    </div>
+  )
+
+  // Show loading screen until images are loaded
+  if (!imagesLoaded) {
+    return <LoadingScreen/>;
+  }
+
   return (
     <div 
       className='flex flex-col items-center justify-center w-screen min-h-screen px-6 py-6 space-y-6 bg-center bg-cover md:flex-row'
-      style={{backgroundImage: "url('/grainy-background.png')"}}
+      style={{
+        backgroundImage: "url('/grainy-background.png')",
+        animation: 'fadeIn 0.5s ease-in-out forwards'
+      }}
     >
+      <style jsx>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.5s ease-in-out forwards;
+        }
+      `}</style>
       {/* Left */}
       <div className='flex flex-col items-center justify-center w-full h-full gap-8 px-4 md:w-2/3'>
         <div className='w-3/4 space-y-4'>
