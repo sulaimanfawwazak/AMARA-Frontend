@@ -3,7 +3,7 @@ import { useDropzone } from 'react-dropzone';
 import { BsFileEarmarkCheck } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 
-function FileUpload({ onFileSelect }) {
+function ExamScheduleUpload({ onFileSelect }) {
   const [fileName, setFileName] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const navigate = useNavigate();
@@ -134,4 +134,4 @@ function FileUpload({ onFileSelect }) {
   );
 }
 
-export default FileUpload;
+export default ExamScheduleUpload;

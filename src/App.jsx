@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './App.css'
-import FileUpload from './pages/FileUpload'
+import ExamScheduleUpload from './pages/ExamScheduleUpload'
 
 function App() {
 
@@ -10,7 +10,7 @@ function App() {
 
   return (
     <div className='absolute top-0 left-0'>
-      <FileUpload onFileSelect={handleFileSelect}/>
+      <ExamScheduleUpload onFileSelect={handleFileSelect}/>
     </div>
   )
 }

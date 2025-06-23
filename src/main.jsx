@@ -1,10 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import FileUpload from './pages/FileUpload';
+import ExamScheduleUpload from './pages/ExamScheduleUpload';
 import ExamList from './pages/ExamList';
 import Playground from './pages/Playground'
 import './index.css';
+import ClassList from './pages/ClassList';
+import ClassScheduleUpload from './pages/ClassScheduleUpload';
+import Landing from './pages/Landing';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   // <StrictMode>
@@ -14,8 +17,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<FileUpload />} />
-        <Route path="/exam" element={<ExamList />} />
+        <Route path="/" element={<Landing />} />
+        <Route path="/exam-schedule" element={<ExamScheduleUpload />} />
+        <Route path="/class-schedule" element={<ClassScheduleUpload />} />
+        <Route path="/exam-list" element={<ExamList />} />
+        <Route path="/class-list" element={<ClassList />} />
         <Route path="/playground" element={<Playground />} />
       </Routes>
     </BrowserRouter>
