@@ -7,6 +7,9 @@ const API_KEY = import.meta.env.VITE_API_KEY;
 const DISCOVERY_DOC = "https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest";
 const SCOPES = 'https://www.googleapis.com/auth/calendar.events';
 
+const START_DATE = '2025-08-18';
+const TIMEZONE = 'Asia/Jakarta';
+
 function ClassList() {
   const location = useLocation();
   const classes = location.state?.classes;
@@ -71,6 +74,20 @@ function ClassList() {
     };
   }, []);
 
+  function getDayFromWeekday(weekday) {
+    const map = {
+      'Sunday': 'SU',
+      'Monday': 'MO',
+      'Tuesday': 'TU',
+      'Wednesday': 'WE',
+      'Thursday': 'TH',
+      'Friday': 'FR',
+      'Saturday': 'SA'
+    };
+
+    return map[weekday];
+  }
+
   const addToCalendar = () => {
     if (!gapiLoaded || !gisLoaded || !tokenClient) {
       alert("Google API not fully loaded yet. Please try again");
@@ -86,19 +103,48 @@ function ClassList() {
 
       try {
         for (const jadwal of classes) {
-          const [startTime, endTime] = jadwal.jam.split("-");
-          const date = jadwal.tanggal.split("-").reverse().join("-"); // Convert dd-mm-yyyy → yyyy-mm-dd
+          const mataKuliah              = jadwal.mata_kuliah;
+          const kelas                   = jadwal.kelas;
+          const hari                    = getDayFromWeekday(jadwal.hari);
+          let startDate                 = null; // Initialize the startDate
+          if (hari === 'MO') {
+            startDate = '2025-08-18';
+          }
+          else if (hari === 'TU') {
+            startDate = '2025-08-19';
+          }
+          else if (hari === 'WE') {
+            startDate = '2025-08-20';
+          }
+          else if (hari === 'TH') {
+            startDate = '2025-08-21';
+          }
+          else if (hari === 'FR') {
+            startDate = '2025-08-22';
+          }
+          else if (hari === 'SA') {
+            startDate = '2025-08-23';
+          }
+          else if (hari === 'SU') {
+            startDate = '2025-08-24';
+          }
 
-          const startDateTime = `${date}T${startTime}:00+07:00`;
-          const endDateTime = `${date}T${endTime}:00+07:00`;
+          const [startTime, endTime]    = jadwal.jam.split("-");
+          // const date = jadwal.tanggal.split("-").reverse().join("-"); // Convert dd-mm-yyyy → yyyy-mm-dd
+          const ruangan                 = jadwal.ruangan;
+
+          // const startDateTime = `${date}T${startTime}:00+07:00`;
+          const startDateTime = `${startDate}T${startTime}:00+07:00`;
+          // const endDateTime = `${date}T${endTime}:00+07:00`;
+          const endDateTime = `${startDate}T${endTime}:00+07:00`;
 
           // console.log(`date: ${date}`);
           // console.log(`startDateTime: ${startDateTime}`);
           // console.log(`endDateTime: ${endDateTime}`);
 
           const event = {
-            summary: jadwal.mata_kuliah,
-            location: `${jadwal.ruangan}, ${jadwal.no_kursi}`,
+            summary: `${mataKuliah} ${kelas}`, // e.g Pancasila PPN19
+            location: `${ruangan}`,
             start: {
               // dateTime: `${exam.tanggal}T${exam.jam}`,
               dateTime: startDateTime,
@@ -109,6 +155,16 @@ function ClassList() {
               dateTime: endDateTime,
               timeZone: "Asia/Jakarta",
             },
+            recurrence: [
+              `RRULE:FREQ=WEEKLY;BYDAY=${hari};COUNT=12;`
+            ],
+            reminders: {
+              useDefault: false,
+              overrides: [
+                { method: 'popup', minutes: 60 },
+                { method: 'popup', minutes: 30 }
+              ]
+            }
           };
 
           await window.gapi.client.calendar.events.insert({
