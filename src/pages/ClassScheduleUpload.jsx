@@ -142,11 +142,21 @@ function ClassScheduleUpload({ onFileSelect }) {
         <p className='text-white opacity-75'>{Math.round(loadingProgress)}%</p>
       </div>
     </div>
-  )
+  );
+
+  const Loading = () => (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-b from-blue-400 to-pink-300">
+      <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-lg">
+        <div className="w-10 h-10 mb-4 border-4 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
+        <p className="text-lg font-semibold text-blue-600 font-inter">Loading</p>
+      </div>
+    </div>
+  );
 
   // Show loading screen until images are loaded
   if (!imagesLoaded) {
-    return <LoadingScreen/>;
+    // return <LoadingScreen/>;
+    return <Loading/>;
   }
 
   return (
