@@ -109,6 +109,13 @@ function ExamList() {
               dateTime: endDateTime,
               timeZone: "Asia/Jakarta",
             },
+            reminders: {
+              useDefault: false,
+              overrides: [
+                { method: 'popup', minutes: 60 },
+                { method: 'popup', minutes: 30 }
+              ]
+            }
           };
 
           await window.gapi.client.calendar.events.insert({
