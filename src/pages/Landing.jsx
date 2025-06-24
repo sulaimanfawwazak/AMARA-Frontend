@@ -20,7 +20,9 @@ function Landing({ onFileSelect }) {
     '/logo-ugm-putih.png',
     '/exam-3d-2.png',
     '/file-upload-blue.png',
-    '/ugm-background.png'
+    '/ugm-background.png',
+    '/class-3d-4.png',
+    '/exam-3d-4.png'
   ];
 
   // Preload images on component mount

@@ -85,10 +85,6 @@ function ClassScheduleUpload({ onFileSelect }) {
     formData.append('file', selectedFile); // Attach the file
 
     try {
-      // const backendUrl = import.meta.env.VITE_APP_MODE === "PROD"
-        // ? import.meta.env.VITE_BACKEND_URL_PROD 
-        // : "http://localhost:5000";
-
       const backendUrl = import.meta.env.VITE_BACKEND_URL_PROD || "http://localhost:5000";
       console.log(backendUrl);
 
@@ -115,16 +111,13 @@ function ClassScheduleUpload({ onFileSelect }) {
         throw new Error(`Upload failed: ${response.status}`);
       }
 
-      const exams = await response.json();
-      console.log(exams);
+      const classes = await response.json();
+      console.log(classes);
       
       // Small delay to show 100% completion
       setTimeout(() => {
-        navigate('/class-list', { state: { exams: exams.jadwal } })
+        navigate('/class-list', { state: { classes: classes.schedule } })
       }, 500);
-
-      // Redirect to `/exam`
-      // navigate('/exam', { state: { exams: exams.jadwal } })
     }
     catch (error) {
       console.error("Upload failed:", error);
@@ -161,8 +154,6 @@ function ClassScheduleUpload({ onFileSelect }) {
       className='flex flex-col items-center justify-center w-screen min-h-screen px-6 py-6 space-y-6 bg-center bg-cover md:flex-row'
       style={{
         backgroundImage: "url('/grainy-background.png')",
-        // backgroundImage: "url('/ugm-background.png')",
-        // backgroundImage: "url('/grainy-background-2.png')",
         animation: 'fadeIn 0.5s ease-in-out forwards'
       }}
     >

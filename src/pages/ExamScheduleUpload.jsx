@@ -85,10 +85,6 @@ function ExamScheduleUpload({ onFileSelect }) {
     formData.append('file', selectedFile); // Attach the file
 
     try {
-      // const backendUrl = import.meta.env.VITE_APP_MODE === "PROD"
-        // ? import.meta.env.VITE_BACKEND_URL_PROD 
-        // : "http://localhost:5000";
-
       const backendUrl = import.meta.env.VITE_BACKEND_URL_PROD || "http://localhost:5000";
       console.log(backendUrl);
 
@@ -122,9 +118,6 @@ function ExamScheduleUpload({ onFileSelect }) {
       setTimeout(() => {
         navigate('/exam-list', { state: { exams: exams.jadwal } })
       }, 500);
-
-      // Redirect to `/exam`
-      // navigate('/exam-list', { state: { exams: exams.jadwal } })
     }
     catch (error) {
       console.error("Upload failed:", error);

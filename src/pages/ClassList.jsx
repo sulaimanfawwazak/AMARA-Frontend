@@ -9,7 +9,7 @@ const SCOPES = 'https://www.googleapis.com/auth/calendar.events';
 
 function ClassList() {
   const location = useLocation();
-  const exams = location.state?.exams;
+  const classes = location.state?.classes;
   const navigate = useNavigate();
 
   const [gapiLoaded, setGapiLoaded] = useState(false);
@@ -85,9 +85,9 @@ function ClassList() {
       }
 
       try {
-        for (const exam of exams) {
-          const [startTime, endTime] = exam.jam.split("-");
-          const date = exam.tanggal.split("-").reverse().join("-"); // Convert dd-mm-yyyy → yyyy-mm-dd
+        for (const jadwal of classes) {
+          const [startTime, endTime] = jadwal.jam.split("-");
+          const date = jadwal.tanggal.split("-").reverse().join("-"); // Convert dd-mm-yyyy → yyyy-mm-dd
 
           const startDateTime = `${date}T${startTime}:00+07:00`;
           const endDateTime = `${date}T${endTime}:00+07:00`;
@@ -97,8 +97,8 @@ function ClassList() {
           // console.log(`endDateTime: ${endDateTime}`);
 
           const event = {
-            summary: exam.mata_kuliah,
-            location: `${exam.ruangan}, ${exam.no_kursi}`,
+            summary: jadwal.mata_kuliah,
+            location: `${jadwal.ruangan}, ${jadwal.no_kursi}`,
             start: {
               // dateTime: `${exam.tanggal}T${exam.jam}`,
               dateTime: startDateTime,
@@ -164,21 +164,21 @@ function ClassList() {
     );
   }
 
-  if (!exams) return (
+  if (!classes) return (
     <p
       className='flex justify-center min-h-screen py-24 text-4xl font-bold text-center text-white bg-center font-inter'
       style={{ backgroundImage: "url('/error-background.png')" }}
     >
-      No exam data found. Please upload a file first.
+      No class schedule data found. Please upload a file first.
     </p>
   );
   
-  if (!Array.isArray(exams)) return (
+  if (!Array.isArray(classes)) return (
     <p
       className='flex items-center justify-center min-h-screen text-4xl font-bold text-center text-white font-inter'
       style={{ backgroundImage: "url('/error-background.png')" }}
     >
-      Invalid data format. Please try uploading again. exams is {typeof(exams)}
+      Invalid data format. Please try uploading again. class_schedule is {typeof(classes)}
     </p>
   );
 
@@ -189,12 +189,12 @@ function ClassList() {
     >
       <div className="w-full max-w-3xl p-4 md:p-8">
         <h1 className="mb-6 text-3xl font-bold text-center text-white md:text-5xl font-inter">
-          Your Exam Schedule
+          Jadwal Kuliah Kamu
         </h1>
         
         {/* Exams Container */}
         <div className='space-y-3'>
-          {exams.map((exam, index) => (
+          {classes.map((jadwal, index) => (
             // Exam Card
             <div key={index} className='flex items-center gap-2 px-4 py-4 bg-white rounded-lg shadow-lg sm:flex-row sm:gap-4'>
               {/* Number */}
@@ -204,16 +204,16 @@ function ClassList() {
 
               {/* Rest of the data */}
               <div className='w-full sm:w-11/12'>
-                <h2 className='text-lg font-bold font-inter'>{exam.mata_kuliah}</h2>
+                <h2 className='text-lg font-bold font-inter'>{jadwal.mata_kuliah}</h2>
                 {/* <p className='text-md font-inter'>📅 {exam.tanggal} • 🕗 {exam.jam} • 🏫{exam.ruangan} • #️⃣{exam.no_kursi}</p> */}
-                <div className='grid grid-cols-2 mt-2 sm:grid-cols-4'>
+                <div className='grid grid-cols-2 mt-2'>
                   <div>
-                    <p className='text-md font-inter'>📅 {exam.tanggal}</p>
-                    <p className='text-md font-inter'>🕗 {exam.jam}</p>
+                    <p className='text-md font-inter'>📚 Kelas {jadwal.kelas}</p>
+                    <p className='text-md font-inter'>📅 {jadwal.hari}</p>
                   </div>
                   <div>
-                    <p className='text-md font-inter'>🏫 {exam.ruangan}</p>
-                    <p className='text-md font-inter'>#️⃣ {exam.no_kursi}</p>
+                    <p className='text-md font-inter'>🕗 {jadwal.jam}</p>
+                    <p className='text-md font-inter'>🏫 {jadwal.ruangan}</p>
                   </div>
                 </div>
               </div>
@@ -228,7 +228,7 @@ function ClassList() {
               className='px-4 py-3 font-bold text-white transition bg-blue-500 rounded-md hover:bg-blue-300 font-inter'
               onClick={addToCalendar}
             >
-              Add to Goole Calendar
+              Add to Google Calendar
             </button>
 
             {/* Cancel */}

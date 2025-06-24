@@ -228,7 +228,7 @@ function ExamList() {
               className='px-4 py-3 font-bold text-white transition bg-blue-500 rounded-md hover:bg-blue-300 font-inter'
               onClick={addToCalendar}
             >
-              Add to Goole Calendar
+              Add to Google Calendar
             </button>
 
             {/* Cancel */}
