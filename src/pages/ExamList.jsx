@@ -16,6 +16,8 @@ function ExamList() {
   const [gisLoaded, setGisLoaded] = useState(false);
   const [tokenClient, setTokenClient] = useState(null);
   const [bgLoaded, setBgLoaded] = useState(false);
+  const [toast, setToast] = useState({ message: '', type: '', show: false });
+  const [loading, setLoading] = useState(false);
   // const [loadingProgress, setLoadingProgress] = useState(0);
   
 
@@ -85,6 +87,8 @@ function ExamList() {
       }
 
       try {
+        setLoading(true);
+
         for (const exam of exams) {
           const [startTime, endTime] = exam.jam.split("-");
           const date = exam.tanggal.split("-").reverse().join("-"); // Convert dd-mm-yyyy → yyyy-mm-dd
@@ -123,11 +127,16 @@ function ExamList() {
             resource: event,
           });
         }
-        alert("Events added to your Google Calendar!");
+        // alert("Events added to your Google Calendar!");
+        showToast("Events added to your Google Calendar!");
       }
       catch (err) {
         console.error("Error adding event:", err);
-        alert("Failed to add some events. Please check console for details.");
+        // alert("Failed to add some events. Please check console for details.");
+        showToast("Failed to add some events. Please try again");
+      }
+      finally {
+        setLoading(false);
       }
     };
 
@@ -141,6 +150,11 @@ function ExamList() {
   };
 
   const handleCancel = () => navigate('/');
+
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type, show: true });
+    setTimeout(() => setToast({ ...toast, show: false }), 4000); // Hide after 4s
+  };
 
   // Loading screen component
   const LoadingScreen = () => (
@@ -194,9 +208,18 @@ function ExamList() {
       className='flex flex-col items-center justify-center w-full min-h-screen px-4 py-8 bg-center bg-cover'
       style={{backgroundImage: "url('/background-variation-2.png')"}}
     >
+      {/* Toast */}
+      {toast.show && (
+        <div className={`fixed bottom-6 right-6 px-4 py-3 rounded-md shadow-lg text-white font-inter transition-opacity duration-300 ${
+          toast.type === 'success' ? 'bg-green-500' : 'bg-red-500'
+        }`}>
+          {toast.message}
+        </div>
+      )}
+
       <div className="w-full max-w-3xl p-4 md:p-8">
         <h1 className="mb-6 text-3xl font-bold text-center text-white md:text-5xl font-inter">
-          Your Exam Schedule
+          Jadwal Ujian Kamu
         </h1>
         
         {/* Exams Container */}
@@ -247,8 +270,17 @@ function ExamList() {
           </div>
         </div>
       </div>
+
+      {/* Loading */}
+      {loading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-lg">
+            <div className="w-10 h-10 mb-4 border-4 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
+            <p className="text-lg font-semibold text-blue-600 font-inter">Adding to Google Calendar...</p>
+          </div>
+        </div>
+      )}
     </div>
-    
   );
 }
 
