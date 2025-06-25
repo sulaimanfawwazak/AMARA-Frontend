@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { BsFileEarmarkCheck } from 'react-icons/bs';
-import { FaGithub, FaInstagram, FaLinkedinIn } from 'react-icons/fa';
+import { FaCode, FaGithub, FaInstagram, FaLinkedinIn } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 function ExamScheduleUpload({ onFileSelect }) {
@@ -193,7 +193,10 @@ function ExamScheduleUpload({ onFileSelect }) {
             UGM <span className='text-transparent bg-gradient-to-r from-purple-400 to-pink-300 bg-clip-text'>Exam Schedule</span> to Google Calendar Converter
           </h1>
           <p className='text-xl text-center text-white'>
-            No more manual entry! Sync your upcoming exam schedule to Google Calendar instantly!
+            Ga perlu repot masukin jadwal kelasmu satu-satu ke Google Calendar lagi! Tinggal
+            <span className='font-bold'> upload ⬆️</span>, 
+            <span className='font-bold'> klik 👆</span>, 
+            dan <span className='font-bold'>jadi! ✅</span>
           </p>
         </div>
 
@@ -217,6 +220,9 @@ function ExamScheduleUpload({ onFileSelect }) {
             <a href='https://www.linkedin.com/in/sfawwazak/'>
               <FaLinkedinIn className='transition cursor-pointer hover:text-blue-700'/>
             </a>
+            <a href='https://sfawwaz-web.vercel.app/'>
+              <FaCode className='transition cursor-pointer hover:text-blue-700'/>
+            </a>
           </div>
         </div>
       </div>
@@ -225,7 +231,7 @@ function ExamScheduleUpload({ onFileSelect }) {
       <div className='flex items-center justify-center w-full h-full md:w-1/3'>
         <div className='flex flex-col items-center justify-center w-full max-w-md px-6 py-10 space-y-4 rounded-lg bg-gradient-to-tr from-pink-100 to-blue-200'>
         {/* <div className='flex flex-col items-center justify-center w-full max-w-md px-6 py-10 space-y-4 border rounded-lg backdrop-filter backdrop-blur-md border-white/30 bg-white/20'> */}
-          <h2 className='text-2xl font-semibold text-center text-white md:text-2xl font-inter'>Upload Your Exam Schedule</h2>
+          <h2 className='text-2xl font-semibold text-center text-white md:text-2xl font-inter'>Upload Jadwal Ujian Kamu</h2>
 
           {/* Dropzone area */}
           <div
@@ -333,6 +339,9 @@ function ExamScheduleUpload({ onFileSelect }) {
             </a>
             <a href='https://www.linkedin.com/in/sfawwazak/'>
               <FaLinkedinIn className='transition cursor-pointer hover:text-blue-700'/>
+            </a>
+            <a href='https://sfawwaz-web.vercel.app/'>
+              <FaCode className='transition cursor-pointer hover:text-blue-700'/>
             </a>
           </div>
       </div>
