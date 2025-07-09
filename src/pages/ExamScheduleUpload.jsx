@@ -3,6 +3,10 @@ import { useDropzone } from 'react-dropzone';
 import { BsFileEarmarkCheck } from 'react-icons/bs';
 import { FaCode, FaGithub, FaInstagram, FaLinkedinIn } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import * as pdfjsLib from 'pdfjs-dist/build/pdf';
+import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.min.js';
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 function ExamScheduleUpload({ onFileSelect }) {
   const [fileName, setFileName] = useState('');
@@ -11,6 +15,9 @@ function ExamScheduleUpload({ onFileSelect }) {
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [pdfPreviewUrl, setPdfPreviewUrl] = useState(null);
+  const [numPages, setNumPages] = useState(1);
+  const [renderError, setRenderError] = useState(null);
 
   const navigate = useNavigate();
 
@@ -64,8 +71,58 @@ function ExamScheduleUpload({ onFileSelect }) {
       setFileName(acceptedFiles[0].name);
       setSelectedFile(acceptedFiles[0]);
       // onFileSelect?.(acceptedFiles[0]);
+
+      const url = URL.createObjectURL(acceptedFiles[0]);
+      setPdfPreviewUrl(url);
     }
   }, [onFileSelect]);
+
+  // PDF Renderer
+  useEffect(() => {
+    if (!pdfPreviewUrl) return;
+
+    let isMounted = true;
+
+    const renderPDF = async () => {
+      try {
+        const loadingTask = pdfjsLib.getDocument(pdfPreviewUrl);
+        const pdf = await loadingTask.promise;
+        
+        if (!isMounted) return;
+
+        setNumPages(pdf.numPages);
+        const page = await pdf.getPage(1);
+        const canvas = document.getElementById('pdf-preview');
+        const context = canvas.getContext('2d');
+
+        // Set a fixed width and calculate height proportionally
+        const viewportWidth = 400;
+        const viewport = page.getViewport({ scale: 1.0 });
+        const scale = viewportWidth / viewport.width;
+        const scaledViewport = page.getViewport({ scale: scale });
+        
+        // Set canvas dimension
+        canvas.height = scaledViewport.height;
+        canvas.width = scaledViewport.width;
+
+        page.render({
+          canvasContext: context,
+          viewport: scaledViewport,
+        }).promise;
+      }
+      catch (error) {
+        setRenderError("Failed to display PDF preview")
+        console.error("PDF rendering error:", error);
+      }
+    };
+
+    renderPDF();
+
+    return () => {
+      isMounted = false;
+      URL.revokeObjectURL(pdfPreviewUrl);
+    };
+  }, [pdfPreviewUrl]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -229,7 +286,7 @@ function ExamScheduleUpload({ onFileSelect }) {
 
       {/* Right */}
       <div className='flex items-center justify-center w-full h-full md:w-1/3'>
-        <div className='flex flex-col items-center justify-center w-full max-w-md px-6 py-10 space-y-4 rounded-lg bg-gradient-to-tr from-pink-100 to-blue-200'>
+        <div className='flex flex-col items-center justify-center w-full max-w-lg px-6 py-10 space-y-4 rounded-lg bg-gradient-to-tr from-pink-100 to-blue-200'>
         {/* <div className='flex flex-col items-center justify-center w-full max-w-md px-6 py-10 space-y-4 border rounded-lg backdrop-filter backdrop-blur-md border-white/30 bg-white/20'> */}
           <h2 className='text-2xl font-semibold text-center text-white md:text-2xl font-inter'>Upload Jadwal Ujian Kamu</h2>
 
@@ -255,11 +312,16 @@ function ExamScheduleUpload({ onFileSelect }) {
                 )}
               </>
             ) : (
-              <div className='flex flex-col items-center gap-2 w-52'>
-                <BsFileEarmarkCheck className='text-5xl text-blue-500'/>
-                <p className='w-full px-4 text-center text-gray-700 truncate'>
-                  Selected: <span className='font-bold'>{fileName}</span>
-                </p>
+              <div className='relative flex flex-col w-full h-56 max-w-md overflow-auto bg-white border'>
+                <canvas
+                  id='pdf-preview'
+                  className='items-center justify-center block shadow-md'
+                />
+                {numPages > 1 && (
+                  <div className='absolute px-2 py-1 text-xs text-white bg-black rounded bottom-2 right-2 bg-opacity-70'>
+                    Page 1 of {numPages}
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -297,6 +359,11 @@ function ExamScheduleUpload({ onFileSelect }) {
                     : 'text-blue-500 border-blue-500 hover:bg-red-500 hover:border-red-500 hover:text-white'
                 }`}
                 onClick={(e) => {
+                  const canvas = document.getElementById('pdf-preview');
+                  if (canvas) {
+                    const ctx = canvas.getContext('2d');
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                  }
                   e.stopPropagation();
                   if (!isUploading) {
                     setSelectedFile(null);
